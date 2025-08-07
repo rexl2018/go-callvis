@@ -4,6 +4,7 @@
 package main
 
 import (
+    "context"
     "fmt"
     "log"
     "os"
@@ -13,7 +14,11 @@ import (
 )
 
 func runDotToImage(outfname string, format string, dot []byte) (string, error) {
-    g := graphviz.New()
+    ctx := context.Background()
+    g, err := graphviz.New(ctx)
+    if err != nil {
+        return "", err
+    }
     graph, err := graphviz.ParseBytes(dot)
     if err != nil {
         return "", err
@@ -32,7 +37,7 @@ func runDotToImage(outfname string, format string, dot []byte) (string, error) {
     } else {
         img = fmt.Sprintf("%s.%s", outfname, format)
     }
-    if err := g.RenderFilename(graph, graphviz.Format(format), img); err != nil {
+    if err := g.RenderFilename(ctx, graph, graphviz.Format(format), img); err != nil {
         return "", err
     }
     return img, nil
