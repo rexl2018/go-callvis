@@ -122,6 +122,11 @@ func (a *analysis) DoAnalysis(
 	// Create and build SSA-form program representation.
 	mode := ssa.InstantiateGenerics
 	prog, pkgs := ssautil.AllPackages(initial, mode)
+	// 输出所有包的名字
+	for _, pkg := range pkgs {
+		logf("loaded pkg: %+v", pkg)
+	}
+
 	prog.Build()
 
 	logf("build done, computing callgraph (algo: %v)", algo)
